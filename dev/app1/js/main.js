@@ -1,6 +1,7 @@
 ! function() {
     'use strict'
     var wrapPark = document.getElementById('wrapPark');
+    var wrapInner = echarts.init(document.getElementById("wrapInner"));
     var carFlux = echarts.init(document.getElementById("carFlux"));
     var total = echarts.init(document.getElementById("incomeParking"));
     var info = echarts.init(wrapPark)
@@ -98,7 +99,7 @@
 
         }]
     };
-    carFlux.setOption(optionFlux);
+
 
     var optionTotal = {
 
@@ -157,7 +158,9 @@
             name: '',
             type: 'line',
             stack: '总量',
-            areaStyle: { normal: {} },
+            areaStyle: {
+                normal: {}
+            },
             itemStyle: {
                 normal: {
                     color: "rgba(255,206,122,.9)"
@@ -169,7 +172,9 @@
             name: '',
             type: 'line',
             stack: '总量1',
-            areaStyle: { normal: {} },
+            areaStyle: {
+                normal: {}
+            },
             itemStyle: {
                 normal: {
                     color: "rgba(0,241,255,.9)"
@@ -178,7 +183,7 @@
             data: [10000, 5000, 20000, 5000, 25000, 5000, 15000] // 数据动态添加
         }]
     };
-    total.setOption(optionTotal)
+
 
 
     var optionInnerCircle = {
@@ -231,7 +236,7 @@
             startAngle: 0,
 
             data: [{
-                value: 500, //非空车位
+                value: 700, //非空车位
                 name: '',
                 itemStyle: {
                     normal: {
@@ -258,8 +263,8 @@
                         }
                     }
                 }
-            },{
-                value: 500, // 空车位
+            }, {
+                value: 300, // 空车位
                 name: '',
 
                 itemStyle: {
@@ -317,43 +322,66 @@
             }
         }]
     };
+
+    //启动图表
+    carFlux.setOption(optionFlux);
     info.setOption(optionParkInfo);
-
-    var wrapInner = echarts.init(document.getElementById("wrapInner"));
-
     wrapInner.setOption(optionInnerCircle)
+    total.setOption(optionTotal)
 
-
-
+    //亮点特效
     var smallcircle = document.getElementById('smallcircle');
     var x = smallcircle.offsetLeft;
     var y = smallcircle.offsetTop;
     var widthWrap = smallcircle.offsetWidth;
     var heightWrap = smallcircle.offsetHeight;
-    console.log(widthWrap, heightWrap)
-    console.log(x, y)
-    const r = 0.23 * widthWrap ;
-    console.log(r)
+    const r = 0.23 * widthWrap;
     // 外层圆心坐标
-    var x0 = 0.35 * widthWrap - 0 * widthWrap  ;
-    var y0 = 0.5  * heightWrap - 0.04 * heightWrap ;
-    var L = (500 / 1000) * 2 * Math.PI;
+    var x0 = 0.35 * widthWrap;
+    var y0 = 0.5 * heightWrap - 0.04 * heightWrap;
+    // 空车位占总比  动态数据调用
+    var L = (700 / 1000) * 2 * Math.PI;
     //圆心坐标
-    var x1 = x0 + r * Math.cos(L);
-    var y1 = y0 + r * Math.sin(L) ;
-    console.log(x1,y1)
-    // function drawSmallCircle(x,y) {
-    	var ctx = document.getElementById("smallcircle").getContext("2d");
-    	var circle = new Image();
-    	circle.src = "../images/smallcircle.png";
+    var x1 = x0 + r * Math.cos(L) - 16.5;
+    var y1 = y0 + r * Math.sin(L) - 6;
+    //初始亮点坐标
+    var initialX = x0 + r * Math.cos(2 * Math.PI) - 16.5,
+        initialY = y0 + r * Math.sin(2 * Math.PI) - 6;
+
+
+    // 实时监控 亮点特效，  未完成动画效果
+    function drawSmallCircle(x, y) {
+        var canvas = document.getElementById("smallcircle")
+        var ctx = canvas.getContext("2d");
+        var circle = new Image();
+        circle.src = "../images/smallcircle.png";
         circle.onload = function() {
-        ctx.beginPath();
-        ctx.drawImage(circle, x1, y1, 32, 32)
-        ctx.closePath();
-        ctx.stroke()
+            ctx.beginPath();
+            ctx.drawImage(circle, x, y, 32, 32)
+            ctx.closePath();
+            ctx.stroke()
+        }
     }
 
-    // }
-    // drawSmallCircle(x0,y0)
-
+    function drawLabel(x, y, text, direction) {
+        var canvas = document.getElementById("smallcircle")
+        var ctx = canvas.getContext("2d");
+        ctx.beginPath();
+        ctx.strokeStyle = "rgb(0,241,255)";
+        ctx.moveTo(x, y);
+        ctx.lineTo(x + 0.1 * widthWrap, y + 0.1 * heightWrap * direction);
+        ctx.lineTo(x + 0.45 * widthWrap, y + 0.1 * heightWrap * direction)
+        ctx.fillStyle = "rgb(0,241,255)";
+        ctx.font = "16px fantasy"
+        if (direction === -1) {
+            ctx.fillText(text, x + 0.22 * widthWrap, y + 0.15 * heightWrap * direction)
+        } else {
+            ctx.fillText(text, x + 0.22 * widthWrap, y + 0.05 * heightWrap * direction)
+        }
+        ctx.stroke()
+    }
+    drawSmallCircle(initialX, initialY)
+    drawSmallCircle(x1, y1)
+    drawLabel(0.5 * widthWrap, 0.75 * heightWrap, "总车位:1000", 1)
+    drawLabel(0.5 * widthWrap, 0.25 * heightWrap, "空车位:300", -1)
 }()
