@@ -21,20 +21,25 @@
           <div class="content-top">
             <div class="wrap1">
               <p>车位实时监控</p>
-              <div class="wrap1-content">
+              <div class="wrap1-content" id="wrapPark">
                 
               </div>
+              <div id="wrapInner"></div>
+              <canvas id="smallcircle" width="365" height="260"></canvas>
             </div>
             <div class="wrap2">
               <p>当日停车收入</p>
-
+              <span>1.8</span>
+              <div class="curParkIncome">
+                
+              </div>
             </div>
             <div class="wrap3">
               <p>当日车流量</p>
               <div id="carFlux">
                 
               </div>
-              <span class="clear"></span>
+              
             </div>
           </div>
           <div class="content-bottom">
@@ -42,13 +47,20 @@
               <p>停车收入构成</p>
               <div class="wrap4-content">
                 <div id="incomeParking"></div>
+                <div class="calledwrap">
+                  <span class="users-content">固定用户</span>
+                  <span class="userstemp-content">临时用户</span>
+                  <div id="usersImg"></div>
+                  <div id="temUsers"></div>
+                </div>
               </div>
             </div>
           </div>
         </div>
     </div>
-    <script src="js/lib/echarts.min.js"></script>
+    <script src="js/echarts.min.js"></script>
     <script src="js/main.js"></script>
 </body>
 
 </html>
+ 
