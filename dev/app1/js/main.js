@@ -184,8 +184,6 @@
         }]
     };
 
-
-
     var optionInnerCircle = {
         series: [{
             type: 'pie',
@@ -340,29 +338,49 @@
     var x0 = 0.35 * widthWrap;
     var y0 = 0.5 * heightWrap - 0.04 * heightWrap;
     // 空车位占总比  动态数据调用
-    var L = (700 / 1000) * 2 * Math.PI;
-    //圆心坐标
-    var x1 = x0 + r * Math.cos(L) - 16.5;
-    var y1 = y0 + r * Math.sin(L) - 6;
-    //初始亮点坐标
-    var initialX = x0 + r * Math.cos(2 * Math.PI) - 16.5,
-        initialY = y0 + r * Math.sin(2 * Math.PI) - 6;
+    // var L = (700 / 1000) * 2 * Math.PI;
+    // //圆心坐标
+    // var x1 = x0 + r * Math.cos(L) - 16.5;
+    // var y1 = y0 + r * Math.sin(L) - 6;
+    // //初始亮点坐标
+    // var initialX = x0 + r * Math.cos(2 * Math.PI) - 16.5,
+    //     initialY = y0 + r * Math.sin(2 * Math.PI) - 6;
 
 
     // 实时监控 亮点特效，  未完成动画效果
-    function drawSmallCircle(x, y) {
-        var canvas = document.getElementById("smallcircle")
-        var ctx = canvas.getContext("2d");
+    function drawSmallCircle(n,total) {
+        // 空车位占总比  动态数据
+        var L = (n / total) * 2 * Math.PI;
+        //圆心坐标
+        var x1 = x0 + r * Math.cos(L) - 16.5;
+        var y1 = y0 + r * Math.sin(L) - 6;
+        var ctx = smallcircle.getContext("2d");
         var circle = new Image();
         circle.src = "../images/smallcircle.png";
         circle.onload = function() {
             ctx.beginPath();
-            ctx.drawImage(circle, x, y, 32, 32)
+            ctx.drawImage(circle, x1, y1, 32, 32)
             ctx.closePath();
             ctx.stroke()
         }
     }
-
+    // function drawMoveCircle(x, y) {
+    //     var canvas = document.getElementById("smallcircle")
+    //     var ctx = canvas.getContext("2d");
+    //     var circle = new Image();
+    //     circle.src = "../images/smallcircle.png";
+    //     circle.onload = function() {
+    //         ctx.clearRect(x,y,32,32)
+    //         ctx.beginPath();
+    //         ctx.drawImage(circle, x, y, 32, 32)
+    //         ctx.closePath();
+    //         ctx.stroke()
+    //     }
+    // }
+    // setInterval(function () {
+    //     drawMoveCircle(x1,y1)
+    //     console.log("1")
+    // },1000)
     function drawLabel(x, y, text, direction) {
         var canvas = document.getElementById("smallcircle")
         var ctx = canvas.getContext("2d");
@@ -380,8 +398,8 @@
         }
         ctx.stroke()
     }
-    drawSmallCircle(initialX, initialY)
-    drawSmallCircle(x1, y1)
+    drawSmallCircle(1000,1000)
+    drawSmallCircle(700,1000)
     drawLabel(0.5 * widthWrap, 0.75 * heightWrap, "总车位:1000", 1)
     drawLabel(0.5 * widthWrap, 0.25 * heightWrap, "空车位:300", -1)
 }()
